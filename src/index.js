@@ -10,8 +10,9 @@ const { searchGoogle } = require('./search');
     } else {
         console.log('Search Results:');
         results.forEach((result, index) => {
-            console.log(`${index + 1}. ${result.title} - ${result.link}`);
+            console.log(`\nResult ${index + 1}:`);
+            console.log(`Link: ${result.link}`);
+            console.log(`HTML: ${result.html.substring(0, 500)}...`); // Print only first 500 characters of HTML for brevity
         });
     }
 })();
-

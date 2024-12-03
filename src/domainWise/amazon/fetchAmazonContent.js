@@ -1,3 +1,4 @@
+/*
 const { chromium } = require('playwright');
 
 async function fetchAmazonContent(url) {
@@ -48,8 +49,9 @@ async function fetchAmazonContent(url) {
 }
 
 module.exports = fetchAmazonContent;
+*/
 
-/*
+
 const { chromium } = require('playwright');
 
 async function fetchAmazonContent(url) {
@@ -61,10 +63,10 @@ async function fetchAmazonContent(url) {
     const page = await context.newPage();
 
     try {
-        await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 180000 });
+        await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 10000 });
 
         // Wait for a key element to load (e.g., 'title_feature_div')
-        await page.waitForSelector('#title_feature_div', { timeout: 60000 });
+        await page.waitForSelector('#title_feature_div', { timeout: 10000 });
 
         const content = await page.evaluate(() => {
             const ids = [
@@ -90,4 +92,3 @@ async function fetchAmazonContent(url) {
 }
 
 module.exports = fetchAmazonContent;
-*/

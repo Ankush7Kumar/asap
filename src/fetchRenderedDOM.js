@@ -9,7 +9,8 @@ async function fetchRenderedBodyContent(url) {
     const page = await context.newPage();
 
     try {
-        await page.goto(url, { waitUntil: 'networkidle', timeout: 60000 });
+        // Maybe waiting 60 seconds here is too much, this needs to be changed later
+        await page.goto(url, { waitUntil: 'networkidle', timeout: 60000 }); 
         // Extract the content of the <body> tag
         const bodyContent = await page.evaluate(() => document.body.innerHTML);
         return bodyContent;
@@ -18,4 +19,4 @@ async function fetchRenderedBodyContent(url) {
     }
 }
 
-module.exports = fetchRenderedBodyContent; // Export the function correctly
+module.exports = fetchRenderedBodyContent;

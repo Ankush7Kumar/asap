@@ -1,4 +1,5 @@
-const fetchRenderedBodyContent = require('./fetchRenderedDOM'); // Correct import
+const fetchRenderedBodyContent = require('./fetchRenderedDOM'); 
+const fetchAndConvertToMarkdown = require('./fetchAndConvertToMarkdown');
 const getGoogleResults = require('./googleSearch');
 require('dotenv').config(); // Load environment variables
 
@@ -19,19 +20,20 @@ const CX = process.env.GOOGLE_CSE_ID; // Replace with your Custom Search Engine 
         const urls = await getGoogleResults(query, API_KEY, CX);
         console.log(`Top 3 results:\n${urls.join('\n')}\n`);
 
-        // Step 2: Fetch <body> content for each URL
-        for (const url of urls) {
-            console.log(`Fetching rendered body content for: ${url}`);
+        // Step 2: Fetch mardown of <body> content for each URL
+        for (const [index, url] of urls.entries()) {
+            console.log(`\n\nFetching rendered body content for URL #${index + 1}: ${url}\n`);
             try {
-                const bodyContent = await fetchRenderedBodyContent(url);
-                console.log(`\n===== Body Content for ${url} =====`);
-                console.log(bodyContent); // Log first 500 characters for brevity
-                console.log(`\n=================================\n`);
+                const markDownBodyContent = await fetchAndConvertToMarkdown(url);
+                console.log(`\n===== Markdown Body Content for URL #${index + 1}: ${url} ==STARTING==========================\n`);
+                console.log(markDownBodyContent);
+                console.log(`\n===== Markdown Body Content for URL #${index + 1}: ${url} ==ENDING============================\n\n\n`);
             } catch (error) {
-                console.error(`Failed to fetch ${url}:`, error.message);
+                console.error(`\nIndex.js: Failed to fetchAndConvertToMarkdown for URL #${index + 1}: ${url} and Error: ${error.message}\n`);
             }
         }
+        
     } catch (error) {
-        console.error('\nAn error occurred:', error.message);
+        console.error('\nIndex.js: An error occurred:', error.message);
     }
 })();

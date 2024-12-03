@@ -9,13 +9,17 @@ async function fetchRenderedBodyContent(url) {
     const page = await context.newPage();
 
     try {
-        await page.goto(url, { waitUntil: 'networkidle', timeout: 60000 });
-        // Extract the content of the <body> tag
-        const bodyContent = await page.evaluate(() => document.body.innerHTML);
-        return bodyContent;
+        try {
+            await page.goto(url, { waitUntil: 'networkidle', timeout: 60000 });
+            const bodyContent = await page.evaluate(() => document.body.innerHTML);
+            return bodyContent;
+        } catch (error) {
+            console.error(`fetchRenderedDOM.js: Failed to fetch the rendered body for URL ${url}:`, error.message);
+            return null; // Fallback value
+        }
     } finally {
         await browser.close();
     }
 }
 
-module.exports = fetchRenderedBodyContent; // Export the function correctly
+module.exports = fetchRenderedBodyContent;

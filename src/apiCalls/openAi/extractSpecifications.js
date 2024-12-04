@@ -1,6 +1,5 @@
 const axios = require('axios');
-
-/**
+/** 
  * Extracts product specifications from the HTML body using OpenAI's ChatGPT API.
  * @param {string} bodyContent - HTML body content of the page.
  * @param {string} apiKey - OpenAI API key.

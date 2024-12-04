@@ -18,11 +18,12 @@ const OPENAI_API_KEY = process.env.OPENAI_API_KEY; // ChatGPT API key
         // Step 1: Fetch top 3 search results (printing 3 for now because 10 or 5 takes up a lot of space on the stdout)
         console.log(`\nSearching Google for: ${query}\n`);
         const urls = await getGoogleResults(query, API_KEY, CX);
-        console.log(`Top 3 results:\n${urls.join('\n')}\n`);
+        console.log("urls.len: ",urls.length);
+        console.log(`Top ${urls.length} results:\n${urls.join('\n')}\n`);
 
         // Step 2: Fetch <body> content for each URL and extract specifications
         for (const url of urls) {
-            console.log(`Fetching rendered body content for: ${url}`);
+            console.log(`Index.js: Fetching rendered body content for: ${url}`);
             try {
                 const bodyContent = await fetchRenderedBodyContent(url);
                 if (bodyContent) {
@@ -34,10 +35,10 @@ const OPENAI_API_KEY = process.env.OPENAI_API_KEY; // ChatGPT API key
                     }
                 }
             } catch (error) {
-                console.error(`Failed to fetch or process ${url}`);
+                console.error(`\nIndex.js: Failed to fetch or process for URL: ${url} and Error: ${error.message}\n`);
             }
         }
     } catch (error) {
-        console.error('\nAn error occurred:', error.message);
+        console.error('\nIndex.js: An error occurred:', error.message);
     }
 })();

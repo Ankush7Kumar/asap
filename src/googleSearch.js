@@ -11,7 +11,7 @@ async function getGoogleResults(query, apiKey, cx) {
     const url = `https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(query)}&key=${apiKey}&cx=${cx}`;
     const response = await axios.get(url);
     const items = response.data.items || [];
-    return items.slice(0, 1).map(item => item.link); // Return top 3 URLs
+    return items.slice(0, 3).map(item => item.link); // Return top 3 URLs
 }
 
 module.exports = getGoogleResults;

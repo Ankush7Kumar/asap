@@ -18,7 +18,7 @@ async function extractSpecifications(bodyContent, apiKey) {
         const response = await axios.post(
             endpoint,
             {
-                model: 'gpt-4',
+                model: 'gpt-4-turbo',
                 messages: [{ role: 'user', content: prompt }],
             },
             {

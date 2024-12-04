@@ -19,12 +19,10 @@ const CX = process.env.GOOGLE_CSE_ID; // Replace with your Custom Search Engine 
         console.log(`\nSearching Google for: ${query}\n`);
         const urls = await getGoogleResults(query, API_KEY, CX);
         
-        console.log(`Top 3 results:\n${urls.join('\n')}\n`);
-        console.log("cp1\n");
+        console.log(`Top ${urls.length} results:\n${urls.join('\n')}\n`);
         console.log("urls.len = ", urls.length);
         // Step 2: Fetch mardown of <body> content for each URL
         for (const [index, url] of urls.entries()) {
-            console.log("cp2\n");
             console.log(`\n\nFetching rendered body content for URL #${index + 1}: ${url}\n`);
             try {
                 const markDownBodyContent = await fetchAndConvertToMarkdown(url);

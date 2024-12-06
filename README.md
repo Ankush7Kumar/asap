@@ -20,4 +20,7 @@ Follow these steps to set up and run the project:
     node src/index.js '6205 2rs skf'
     ```
     Change the query to one of your choice.
+
+
+[Google Doc](https://docs.google.com/document/d/13kJUAbfuvs0Bk7dOruzrox4vOj0jZu3EFhC7HLqay48/edit?usp=sharing)
     

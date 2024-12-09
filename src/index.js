@@ -29,7 +29,11 @@ console.log("-------\n\n");
     dangerouslyAllowBrowser: true,
   });
 
-  const input = "6205 2RS BRG";
+  //const input = "6205 2RS BRG";
+  //const input = "STRAP BLADDER 12 X .625G OPEN CLAMP";
+
+  const input = "IPTCI NO. NAP 211-32";
+  
 
 
   let messages = [

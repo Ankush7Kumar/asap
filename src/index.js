@@ -31,6 +31,7 @@ console.log("-------\n\n");
 
   const input = "6205 2RS BRG";
 
+
   let messages = [
     {
       role: "system",
@@ -40,7 +41,15 @@ console.log("-------\n\n");
       role: "user",
       content: `Your task is to interpret the input (which talks about a manufacturing industry part) and in the end, print the specifications of this product talked about in the input. 
       The input may or may not contain part-number, manufacturer, category, and attributes used in the manufacturing parts industry. 
-      You may take help from the given functions getGoogleResults to find the result of this input on Google and fetchRenderedBodyContent to get the HTML body of those URLs that result from getGoogleResults and read through them.`,
+      You may take help from the given functions getGoogleResults to find the result of this input on Google and fetchRenderedBodyContent to get the HTML body of those URLs that result from getGoogleResults and read through them.
+      
+      Step 1 - Review the input, which is a raw data string I have provided and determine the manufacturer name and part number for the item. 
+
+      Step 2 - Search the internet to provide a category and an exhaustive list of attributes and their values for the determined mfg name and part number from Step 1. Include attributes in categories such as General Product Specification, Physical Dimensions, Design and Construction, and Performance Characteristics. 
+
+      Step 3 - Return the attributes from Step 2 in two different descriptions. 1. A combined comma separated description with the format of "Attribute label: attribute value, Attribute label: attribute value". 2. A combined comma separated description consisting of attribute values only Ex. attribute value, attribute value, attribute value
+
+      `,
     },
     {
       role: "user",

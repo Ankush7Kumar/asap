@@ -5,6 +5,7 @@ const axios = require('axios');
  * @param {string} apiKey - OpenAI API key.
  * @returns {Promise<string>} - Extracted product specifications.
  */
+
 async function extractSpecifications(bodyContent, apiKey) {
     const endpoint = 'https://api.openai.com/v1/chat/completions';
     const prompt = `

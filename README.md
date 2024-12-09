@@ -18,10 +18,12 @@ Follow these steps to set up and run the project:
 3. **Navigate to the asap directory and start the application with the following command**:
 
     ```bash
-    node src/index.js '6205 2rs skf'
+    node src/index.js 
     ```
-    Change the query to one of your choice.
+    To change the query to one of your choice, edit the input variable in index.js file.
 
 
 [Google Doc](https://docs.google.com/document/d/13kJUAbfuvs0Bk7dOruzrox4vOj0jZu3EFhC7HLqay48/edit?usp=sharing)
-    
+
+
+Functionality: Uses Function Calling to find specifications of a product    

@@ -1,62 +1,128 @@
-const fetchRenderedBodyContent = require('./fetchRenderedDOM'); // Correct import
-const getGoogleResults = require('./apiCalls/google/googleSearch');
-const extractSpecifications = require('./apiCalls/openAi/extractSpecifications'); // Module for extracting specifications
-const summarizeSpecifications = require('./apiCalls/openAi/summarizeSpecifications'); // Module for summarizing specifications
-require('dotenv').config(); // Load environment variables
-
-const API_KEY = process.env.GOOGLE_API_KEY; // Replace with your API key
-const CX = process.env.GOOGLE_CSE_ID; // Replace with your Custom Search Engine ID
-const OPENAI_API_KEY = process.env.OPENAI_API_KEY; // ChatGPT API key
+const OpenAI = require("openai");
+const getGoogleResults = require("./apiCalls/google/googleSearch");
+const fetchRenderedBodyContent = require("./fetchRenderedDOM");
+require("dotenv").config({ path: "./.env" });
+const fs = require('fs');
 
 
+// Ensure API keys are retrieved from environment variables
+const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY; // Google API Key
+const GOOGLE_CSE_ID = process.env.GOOGLE_CSE_ID; // Google Custom Search Engine ID
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY; // OpenAI API Key
 
+if (!GOOGLE_API_KEY || !GOOGLE_CSE_ID || !OPENAI_API_KEY) {
+  console.error("Error: Missing required API keys. Please check your .env file.");
+  process.exit(1);
+}
 
+// Log API keys for debugging (optional, remove in production)
+/*
+console.log("Google API Key:", GOOGLE_API_KEY);
+console.log("Google CSE ID:", GOOGLE_CSE_ID);
+console.log("OpenAI API Key:", OPENAI_API_KEY);
+console.log("-------\n\n");
+*/
 
 (async () => {
-    const query = process.argv[2]; // Get query from command line arguments
-    if (!query) {
-        console.log('Please provide a search query.');
-        return;
+  const openai = new OpenAI({
+    apiKey: OPENAI_API_KEY,
+    dangerouslyAllowBrowser: true,
+  });
+
+  const input = "6205 2RS BRG";
+
+  let messages = [
+    {
+      role: "system",
+      content: `You are an assistant specialized in interpreting manufacturing industry inputs.`,
+    },
+    {
+      role: "user",
+      content: `Your task is to interpret the input (which talks about a manufacturing industry part) and in the end, print the specifications of this product talked about in the input. 
+      The input may or may not contain part-number, manufacturer, category, and attributes used in the manufacturing parts industry. 
+      You may take help from the given functions getGoogleResults to find the result of this input on Google and fetchRenderedBodyContent to get the HTML body of those URLs that result from getGoogleResults and read through them.`,
+    },
+    {
+      role: "user",
+      content: `Here is the input for your task: "${input}"`,
+    },
+  ];
+
+  const functions = [
+    {
+      name: "getGoogleResults",
+      description: "Fetches Google search results for a given query using Google API.",
+      parameters: {
+        type: "object",
+        properties: {
+          query: { type: "string", description: "The search query." },
+          apiKey: { type: "string", description: "Google API key." },
+          CX: { type: "string", description: "Custom Search Engine ID." },
+        },
+        required: ["query", "apiKey", "CX"],
+      },
+    },
+    {
+      name: "fetchRenderedBodyContent",
+      description: "Fetches the rendered HTML body content from a given URL.",
+      parameters: {
+        type: "object",
+        properties: {
+          url: { type: "string", description: "The URL to fetch the HTML body from." },
+        },
+        required: ["url"],
+      },
+    },
+  ];
+
+  const callModel = async () => {
+    
+    const response = await openai.chat.completions.create({
+      model: "gpt-3.5-turbo-0125",
+      messages,
+      functions,
+      temperature: 0,
+    });
+
+    if (response.choices[0].finish_reason === "function_call") {
+      const functionCall = response.choices[0].message.function_call;
+      const { name, arguments: args } = functionCall;
+
+      let functionResponse;
+      if (name === "getGoogleResults") {
+        const { query, apiKey, CX } = JSON.parse(args);
+        functionResponse = await getGoogleResults(query, GOOGLE_API_KEY, GOOGLE_CSE_ID);
+      } else if (name === "fetchRenderedBodyContent") {
+        const { url } = JSON.parse(args);
+        functionResponse = await fetchRenderedBodyContent(url);
+      }
+
+      const functionContent = typeof functionResponse === "object" ? JSON.stringify(functionResponse) : functionResponse;
+
+      messages.push(response.choices[0].message);
+      // Append the function's response to messages
+      messages.push({
+        role: "function",
+        name: name,
+        content: functionContent,
+      });
+
+      // Recursively call the model with updated messages
+      return await callModel(messages);
     }
 
-    try {
-        // Step 1: Fetch top 3 search results (printing 3 for now because 10 or 5 takes up a lot of space on the stdout)
-        console.log(`\nSearching Google for: ${query}\n`);
-        const urls = await getGoogleResults(query, API_KEY, CX);
-        console.log(`urls.len: ${urls.length}`);
-        //console.log(`Top ${urls.length} results:\n${urls.join('\n')}\n`);
-        console.log(`Top ${urls.length} results:\n${urls.map((url, index) => `${index + 1}. ${url}`).join('\n')}\n`);
+    return response;
+  };
 
-
-        // Initialize a variable to hold the concatenated specifications
-        let allSpecifications = "";
-
-        // Step 2: Fetch <body> content for each URL and extract specifications
-        for (const [index, url] of urls.entries()) {
-            console.log(`Fetching body content for #${index + 1}`);
-            try {
-                const bodyContent = await fetchRenderedBodyContent(url);
-                if (bodyContent) {
-                    const specifications = await extractSpecifications(bodyContent, OPENAI_API_KEY);
-                    console.log(`Fetching specifications for #${index + 1}\n`);
-                    if (specifications) {
-                        allSpecifications += `\n===== Product Specifications from ${url} =====\n`;
-                        allSpecifications += specifications;
-                        allSpecifications += `\n============================================\n`;
-                    }
-                }
-            } catch (error) {
-                console.error(`\nIndex.js: Failed to fetch or process for URL: ${url} and Error: ${error.message}\n`);
-            }
-        }
-
-        // Step 3: Summarize all specifications
-        console.log(`\nSummarizing all specifications...\n`);
-        const finalSummary = await summarizeSpecifications(allSpecifications, OPENAI_API_KEY);
-
-        // Print the summarized specifications
-        console.log('\nFinal Summarized Specifications:\n', finalSummary);
-    } catch (error) {
-        console.error('\nIndex.js: An error occurred:', error.message);
-    }
+  try {
+    const response = await callModel(messages);
+    //console.log(messages)
+    const stream = fs.createWriteStream('output.json', { flags: 'w' });
+    stream.write(JSON.stringify(messages, null, 2));
+    stream.end();
+    console.log("\nFinal Response:");
+    console.log(response.choices[0].message.content);
+  } catch (error) {
+    console.error("Error during API call:", error);
+  }
 })();

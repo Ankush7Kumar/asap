@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-/**
+/** 
  * Fetches top 3 search results from Google Custom Search Engine API.
  * @param {string} query - Search query string.
  * @param {string} apiKey - Google API Key.

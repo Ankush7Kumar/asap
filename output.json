@@ -5,52 +5,38 @@
   },
   {
     "role": "user",
-    "content": "\n      Step 1 - Review the input, which is a raw data string I have provided and determine the manufacturer name and part number for the item. \n\n      Step 2 - Search the internet to provide a category and an exhaustive list of attributes and their values for the determined mfg name and part number from Step 1. Include attributes in categories such as General Product Specification, Physical Dimensions, Design and Construction, and Performance Characteristics. \n\n      Step 3 - Return the attributes from Step 2 in two different descriptions. 1. A combined comma separated description with the format of \"Attribute label: attribute value, Attribute label: attribute value\". 2. A combined comma separated description consisting of attribute values only Ex. attribute value, attribute value, attribute value\n\n      "
+    "content": "\n      Step 1 - Review the input, which is a raw data string I have provided and determine the manufacturer name and part number for the item. \n\n      Step 2 - Search the internet to provide a category and an exhaustive list of attributes and their values for the determined mfg name and part number from Step 1. Include attributes in categories such as General Product Specification, Physical Dimensions, Design and Construction, and Performance Characteristics. \n\n      Step 3 - Return the attributes from Step 2 in two different descriptions. 1. A combined comma separated description with the format of \"Attribute label: attribute value, Attribute label: attribute value\". 2. A combined comma separated description consisting of attribute values only Ex. attribute value, attribute value, attribute value\n\n      Keep trying the websites until you get specifications.\n      "
   },
   {
     "role": "user",
-    "content": "Here is the input for your task: \"6205 2RS BRG\""
+    "content": "Here is the input for your task: \"IPTCI NO. NAP 211-32\""
   },
   {
     "role": "assistant",
     "content": null,
     "function_call": {
       "name": "getGoogleResults",
-      "arguments": "{\"query\":\"6205 2RS BRG manufacturer and part number\",\"apiKey\":\"AIzaSyDv6qJXKDqzjXe2v6lJ2w\",\"CX\":\"017576662512468239146:omuauf_lfve\",\"CX2\":\"017576662512468239146:omuauf_lfve\"}"
+      "arguments": "{\"query\":\"IPTCI NO. NAP 211-32 specifications\",\"apiKey\":\"AIzaSyDqjDqF5LTnkcZGw6lJl2QwZlJ9vYvYv5I\",\"CX\":\"017643447650720746761:zjzjzjzjzjz\"}"
     },
     "refusal": null
   },
   {
     "role": "function",
     "name": "getGoogleResults",
-    "content": "[\"https://www.amazon.com/25x52x15mm-Pre-Lubricated-Performance-Effective-Bearings/dp/B081JWXB8P\",\"https://pfibearings.com/product/6205-2rs-c0/\",\"https://www.amazon.com/NICHE-CBR600RR-CBR1000RR-6005-2RS-6205-2RS/dp/B0CKY4BT6J\",\"https://www.ebay.com/itm/263753606475\",\"https://www.skf.com/in/products/rolling-bearings/ball-bearings/deep-groove-ball-bearings/productid-6205\",\"https://idcselect.com/products/6205-2rs-78-special-bore-bearing-2/\",\"https://www.tristate-bearing.com/m/smt-bearing\",\"https://www.motion.com/products/sku/07407938\",\"https://www.grainger.com/product/SKF-Radial-Ball-Bearing-6205-23Y215\",\"https://www.dutton-lainson.com/proddetail.php?prod=21810\"]"
+    "content": "[\"https://iptci.com/products/standard-pillow-blocks/NAP/diameter:2_in/sealType:B\",\"https://www.iptci.com/pdf/IPTCI_catalog.pdf\",\"https://iptci.com/pdf/spec/nap.pdf\",\"https://www.iptci.com/pdf/spec/ucpl.pdf\",\"https://dodgeindustrial.com/wp-content/uploads/2023/01/86ef7985-78ec-46cd-91bc-af2d0032510f.pdf\",\"https://www.powerriteproducts.com/wp-content/uploads/2024/02/Bearings24-1.pdf\",\"https://www.baumhydraulics.com/images/Catalog/sec-q.pdf\",\"https://www.translinkpt.com/wp-content/uploads/2018/02/catalogo_soportes.pdf\",\"https://picclick.com/Business-Industrial/Industrial-Automation-Motion-Controls/Mechanical-Power-Transmission/Bearings-Bushings/Mounted-Bearings-Housings/\"]"
   },
   {
     "role": "assistant",
-    "content": "I have found some links related to the manufacturer and part number \"6205 2RS BRG\". Let me extract the manufacturer name and part number from these links.",
+    "content": null,
     "function_call": {
       "name": "fetchDataFromRenderedBodyContent",
-      "arguments": "{\"url\":\"https://pfibearings.com/product/6205-2rs-c0/\"}"
+      "arguments": "{\"url\":\"https://iptci.com/products/standard-pillow-blocks/NAP/diameter:2_in/sealType:B\"}"
     },
     "refusal": null
   },
   {
     "role": "function",
     "name": "fetchDataFromRenderedBodyContent",
-    "content": "Since the provided HTML content states \"no body content found\" and does not contain any extractable information on product specifications, there are no specifications to list."
-  },
-  {
-    "role": "assistant",
-    "content": "I couldn't retrieve any information from the provided link. Let me try another one.",
-    "function_call": {
-      "name": "fetchDataFromRenderedBodyContent",
-      "arguments": "{\"url\":\"https://www.skf.com/in/products/rolling-bearings/ball-bearings/deep-groove-ball-bearings/productid-6205\"}"
-    },
-    "refusal": null
-  },
-  {
-    "role": "function",
-    "name": "fetchDataFromRenderedBodyContent",
-    "content": "- **Product Type:** Deep groove ball bearing\n- **Model Number:** 6205\n- **Design:** Single row deep groove ball bearings\n- **Characteristics:**\n  - Simple, versatile, and robust design\n  - Low friction\n  - High-speed capability\n  - Can accommodate radial and axial loads in both directions\n  - Requires little maintenance\n- **Description:** Optimized for low noise and low vibration which enables high rotational speeds.\n- **Dimensions:**\n  - Bore diameter: 25 mm\n  - Outside diameter: 52 mm\n  - Width: 15 mm\n- **Performance:**\n  - Basic dynamic load rating: 14.8 kN\n  - Basic static load rating: 7.8 kN\n  - Reference speed: 28,000 r/min\n  - Limiting speed: 18,000 r/min\n- **SKF Performance Class:** SKF Explorer\n- **Properties:**\n  - Filling slots: Without\n  - Number of rows: 1\n  - Locating feature, bearing outer ring: None\n  - Bore type: Cylindrical\n  - Cage: Sheet metal\n  - Matched arrangement: No\n  - Radial internal clearance: CN\n  - Material, bearing: Bearing steel\n  - Coating: Without\n  - Sealing: Without\n  - Lubricant: None\n  - Relubrication feature: Without\n- **Logistics:**\n  - Product net weight: 0.125 kg\n  - eClass code: 23-05-08-01\n  - UNSPSC code: 31171504\n- **Additional Features:** Image may differ from product; see technical specification for details."
+    "content": "- **Product Type:** Standard Pillow Blocks\n- **Model:** NAP 211-32\n- **Shaft Diameter Options:** Ranges from 1/2 in to 3 in (including various sizes in inches and mm)\n- **Seal Types:**\n  - B-Type Seal\n  - L3-Type Seal\n- **Dimensional Specifications:**\n  - **H:** 63.5 mm\n  - **A:** 220 mm\n  - **E:** 174 mm\n  - **B:** 60 mm\n  - **S1:** 18 mm\n  - **S2:** 24 mm\n  - **G:** 27 mm\n  - **W:** 128 mm\n  - **Bi:** 71.4 mm\n  - **N:** 27.7 mm\n  - **M:** 27.7 mm\n  - **J:** 16.0 mm\n  - **K:** 76.2 mm\n  - **Bolt Used:** 5/8\n- **Unit Features:**\n  - Standard duty\n  - Cast iron housing\n  - Wide inner race bearing\n  - B-type or L3-type seals\n- **Unit Number:** NAP 211-32\n- **Bearing No.:** NA 211-32\n- **Housing No.:** P 211\n- **Weight:** 9.4 lbs.\n- **Additional Resources:**\n  - CAD/3D Renderings available\n  - Downloadable spec sheets available\n- **Availability:** Information available via distributors login"
   }
 ]

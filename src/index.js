@@ -9,7 +9,7 @@ const fs = require('fs');
 // Ensure API keys are retrieved from environment variables
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY; // Google API Key
 const GOOGLE_CSE_ID = process.env.GOOGLE_CSE_ID; // Google Custom Search Engine ID
-const GOOGLE_CSE_ID_2 = process.env.GOOGLE_CSE_ID_2; // Google Custom Search Engine ID
+//const GOOGLE_CSE_ID_2 = process.env.GOOGLE_CSE_ID_2; // Google Custom Search Engine ID
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY; // OpenAI API Key
 
 if (!GOOGLE_API_KEY || !GOOGLE_CSE_ID || !OPENAI_API_KEY) {
@@ -31,10 +31,9 @@ console.log("-------\n\n");
     dangerouslyAllowBrowser: true, 
   });
 
-  const input = "6205 2RS BRG"; 
+  //const input = "6205 2RS BRG"; 
   //const input = "STRAP BLADDER 12 X .625G OPEN CLAMP";
-
-  //const input = "IPTCI NO. NAP 211-32";
+  const input = "IPTCI NO. NAP 211-32";
 
   console.log("Query: ",input);
   
@@ -54,6 +53,7 @@ console.log("-------\n\n");
 
       Step 3 - Return the attributes from Step 2 in two different descriptions. 1. A combined comma separated description with the format of "Attribute label: attribute value, Attribute label: attribute value". 2. A combined comma separated description consisting of attribute values only Ex. attribute value, attribute value, attribute value
 
+      Keep trying the websites until you get specifications.
       `,
     },
     {
@@ -72,9 +72,9 @@ console.log("-------\n\n");
           query: { type: "string", description: "The search query." },
           apiKey: { type: "string", description: "Google API key." },
           CX: { type: "string", description: "Custom Search Engine ID." },
-          CX2: { type: "string", description: "Custom Search Engine ID 2." },
+          //CX2: { type: "string", description: "Custom Search Engine ID 2." },
         },
-        required: ["query", "apiKey", "CX", "CX2"],
+        required: ["query", "apiKey", "CX", /*"CX2"*/],
       },
     },
     {
@@ -105,8 +105,8 @@ console.log("-------\n\n");
 
       let functionResponse;
       if (name === "getGoogleResults") {
-        const { query, apiKey, CX } = JSON.parse(args);
-        functionResponse = await getGoogleResults(query, GOOGLE_API_KEY, GOOGLE_CSE_ID, GOOGLE_CSE_ID_2);
+        const { query, apiKey, CX/*, CX2*/ } = JSON.parse(args);
+        functionResponse = await getGoogleResults(query, GOOGLE_API_KEY, GOOGLE_CSE_ID/*, GOOGLE_CSE_ID_2*/);
       } else if (name === "fetchDataFromRenderedBodyContent") {
         const { url } = JSON.parse(args);
         functionResponse = await fetchDataFromRenderedBodyContent(url);
@@ -115,8 +115,8 @@ console.log("-------\n\n");
       const functionContent = typeof functionResponse === "object" ? JSON.stringify(functionResponse) : functionResponse;
 
       messages.push(response.choices[0].message);
-      //console.log("\n>>message is \n",response.choices[0].message,"\n")
-      //console.log("Function content: \n", functionContent, "\n\n<<")
+      console.log("\n>>message is \n",response.choices[0].message,"\n")
+      console.log("Function content: \n", functionContent, "\n\n<<")
       // Append the function's response to messages
       messages.push({
         role: "function",
@@ -134,7 +134,7 @@ console.log("-------\n\n");
 
   try {
     const response = await callModel(messages);
-   //console.log("\nmessages.length: ",messages.length,"\n\n")
+    console.log("\nmessages.length: ",messages.length,"\n\n")
     
     /*
     messages = messages.map((message) => {

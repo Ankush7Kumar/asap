@@ -7,6 +7,7 @@ const axios = require('axios');
  */
 
 async function extractSpecifications(bodyContent, apiKey) {
+    //console.log("extractSpecifications: apiKey is ", apiKey)
     const endpoint = 'https://api.openai.com/v1/chat/completions';
     const prompt = `
     Extract the product specifications of the product described on the web page. The web page has the following HTML content. Format the specifications as concise bullet points. If no specifications are found, return an empty string.

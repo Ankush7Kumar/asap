@@ -2,8 +2,14 @@ const { chromium } = require('playwright');
 const fetchAmazonContent = require('./domainWise/amazon/fetchAmazonContent');
 const fetchEbayContent = require('./domainWise/ebay/fetchEbayContent');
 const fetchGraingerContent = require('./domainWise/grainger/fetchGraingerContent');
+const extractSpecifications = require('./apiCalls/openAi/extractSpecifications');
+
+require("dotenv").config({ path: "./.env" });
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY; // OpenAI API Key
+
 
 async function fetchRenderedBodyContent(url) {
+
     if (url.startsWith('https://www.amazon.com')) {
         return await fetchAmazonContent(url);
     }
@@ -30,11 +36,39 @@ async function fetchRenderedBodyContent(url) {
             return bodyContent;
         } catch (error) {
             console.error(`fetchRenderedDOM.js: Failed to fetch the rendered body for URL ${url}:`, error.message);
-            return null; // Fallback value
+            return "no body content found"; // Fallback value
         }
     } finally {
         await browser.close();
+    } 
+}
+
+
+async function fetchDataFromRenderedBodyContent(url) {
+    try {
+        // Fetch the rendered body content
+        const bodyContent = await fetchRenderedBodyContent(url);
+        
+        if (!bodyContent) {
+            throw new Error("fetchDataFromRenderedBodyContent: Failed to fetch rendered body content");
+        }
+
+        // Fetch data from the rendered body content
+        const data = await extractSpecifications(bodyContent, OPENAI_API_KEY);
+        
+        if (!data) {
+            throw new Error("fetchDataFromRenderedBodyContent: Failed to extract specifications from the body content");
+        }
+
+        return data;
+    } catch (error) {
+        console.error(`fetchDataFromRenderedBodyContent: ${error.message}`);
+        // You can rethrow the error or return a default value as needed
+        throw error; // or return null;
     }
 }
 
+
 module.exports = fetchRenderedBodyContent;
+module.exports = fetchDataFromRenderedBodyContent;
+

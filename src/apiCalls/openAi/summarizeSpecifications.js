@@ -5,7 +5,7 @@ const axios = require('axios');
  * @param {string} allSpecifications - Combined product specifications from multiple web pages.
  * @param {string} apiKey - OpenAI API key.
  * @returns {Promise<string>} - Final summarized product specifications.
- */
+ */ 
 async function summarizeSpecifications(allSpecifications, apiKey) {
     const endpoint = 'https://api.openai.com/v1/chat/completions';
     const prompt = `

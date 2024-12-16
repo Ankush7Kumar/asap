@@ -62,6 +62,7 @@ async function fetchDataFromRenderedBodyContent(url) {
 
         return data;
     } catch (error) {
+        return "No data found"
         console.error(`fetchDataFromRenderedBodyContent: ${error.message}`);
         // You can rethrow the error or return a default value as needed
         throw error; // or return null;

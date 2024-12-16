@@ -46,12 +46,23 @@ async function googleSearch(query) {
 
 
 async function getGoogleResults(query, apiKey, cx) {
+    const links = await googleSearch(query);
+    console.log("Number of links: ", links.length)
+    
+    // Print all the links
+    links.forEach((link, index) => {
+        console.log(`Link ${index + 1}:`, link);                
+    });
+
+    return links;
+    /*
     const url = `https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(query)}&key=${apiKey}&cx=${cx}`;
     //console.log("getGoogleResults: query is ", query);
     //console.log("getGoogleResults: url is ", url);
     const response = await axios.get(url);
     //console.log("getGoogleResults: response is ",response)
     let items = response.data.items || [];
+    
     
     if (items.length === 0) {
         console.log(" :) :) inside inner loop :) :)")
@@ -60,12 +71,17 @@ async function getGoogleResults(query, apiKey, cx) {
         const response2 = await axios.get(url2);
         let items2 = response2.data.items || [];
         return items2.slice(0, 10).map(item => item.link);
-        */
+        
+        
+       
         const links = await googleSearch(query);
         return links;
     }
 
+    console.log("number of links from cse: ",items.length);
     return items.slice(0, 10).map(item => item.link); // Return top 10 URLs
+    */
+    
 }
 
 

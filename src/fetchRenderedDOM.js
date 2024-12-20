@@ -43,7 +43,7 @@ async function fetchRenderedBodyContent(url) {
     } 
 }
 
-
+ 
 async function fetchDataFromRenderedBodyContent(url) {
     try {
         // Fetch the rendered body content

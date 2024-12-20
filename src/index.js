@@ -4,18 +4,19 @@ const fetchDataFromRenderedBodyContent = require("./fetchRenderedDOM");
 const checkIfSpecificationsFound = require("./apiCalls/openAi/checkIfSpecificationsFound");
 require("dotenv").config({ path: "./.env" });
 const fs = require("fs");
+const dataToFormat = require("./apiCalls/openAi/dataToFormat");
 
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY; // Google API Key
 const GOOGLE_CSE_ID = process.env.GOOGLE_CSE_ID; // Google Custom Search Engine ID
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY; // OpenAI API Key
-
+ 
 if (!GOOGLE_API_KEY || !GOOGLE_CSE_ID || !OPENAI_API_KEY) {
   console.error(
     "Error: Missing required API keys. Please check your .env file."
   );
   process.exit(1);
 }
-
+ 
 const inputArray = [
     "6205 2RS BRG",
     "STRAP BLADDER 12 X .625G OPEN CLAMP",
@@ -119,8 +120,6 @@ const inputArray = [
     "SKF NO. 6018 JEM",
   ];
   
-  
-  
   let productDetails = [
     {
       query: "queryForTesting",
@@ -147,7 +146,7 @@ const processInput = async (input) => {
 
       Step 2 - Search the internet to provide a category and an exhaustive list of attributes and their values for the determined mfg name and part number from Step 1. Include attributes in categories such as General Product Specification, Physical Dimensions, Design and Construction, and Performance Characteristics. 
 
-      Step 3 - Return the attributes from Step 2 in two different descriptions. 1. A combined comma-separated description with the format of "Attribute label: attribute value, Attribute label: attribute value". 2. A combined comma-separated description consisting of attribute values only Ex. attribute value, attribute value, attribute value
+      Step 3 - Put the attributes from Step 2 in two different descriptions. 1. A combined comma-separated description with the format of "Attribute label: attribute value, Attribute label: attribute value". 2. A combined comma-separated description consisting of attribute values only Ex. attribute value, attribute value, attribute value
 
       Keep trying the websites until you get specifications.
       `,
@@ -180,7 +179,7 @@ const processInput = async (input) => {
       parameters: {
         type: "object",
         properties: {
-          url: {
+          url: { 
             type: "string",
             description:
               "The URL to fetch the product specification information from.",
@@ -234,26 +233,36 @@ const processInput = async (input) => {
     const response = await callModel(messages);
     const resultDetail = response.choices[0].message.content;
     const specsFound = await checkIfSpecificationsFound(input, resultDetail, OPENAI_API_KEY);
-
+    /*
     productDetails.push({
       query: input,
       specsFound: specsFound,
       resultDetail: resultDetail,
     });
+    */
+    
+    const resultDetailInFormat = await dataToFormat(input, resultDetail, OPENAI_API_KEY);
+    console.log("--->\n");
+    console.log(resultDetailInFormat);
+    console.log("<---\n");
+    
+    return JSON.parse(resultDetailInFormat);
   } catch (error) {
     console.error(`Error processing input "${input}":`, error);
   }
 };
 
 const main = async () => {
-  for (const input of inputArray) {
+  for (const input of inputArray.slice(2, 3)) {
     console.log(`Processing: ${input}`);
     await processInput(input);
   }
 
   // Save results to a file
-  fs.writeFileSync("output.json", JSON.stringify(productDetails, null, 2));
+  fs.writeFileSync("output1.json", JSON.stringify(productDetails, null, 2));
   console.log("Processing complete. Results saved to output.json.");
 };
 
-main();
+//main();
+
+module.exports = processInput;
